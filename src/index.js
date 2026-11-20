@@ -1,3 +1,35 @@
+const adminPage = `<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Admin</title>
+  </head>
+  <body>
+    <h1>My Links</h1>
+    <table>
+        <tr>
+            <th>Short path</th>
+            <th>Destination</th>
+        </tr>
+        <tr>
+            <td>/drive</td>
+            <td><a href="https://www.drive.google.com">https://www.drive.google.com</a></td>
+        </tr>
+        <tr>
+            <td>/github</td>
+            <td><a href="https://www.github.com">https://www.github.com</a></td>
+        </tr>
+    </table>
+    <form>
+        <label for="path">Path:</label><br>
+        <input type="text" id="path" name="path"><br>
+        <label for="destination">Destination:</label><br>
+        <input type="text" id="destination" name="destination"><br>
+        <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>`;
+
 export default {
     async fetch(request, env, ctx) {
         const path = new URL(request.url).pathname;
@@ -5,6 +37,10 @@ export default {
 
         if (url != null) {
             return Response.redirect(url, 302);
+        }
+
+        if (path === "/admin") {
+            return new Response(adminPage, {headers: {"Content-Type": "text/html; charset=utf-8"}});
         }
 
         return new Response("Not found", {status: 404});

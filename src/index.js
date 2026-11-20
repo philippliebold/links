@@ -1,5 +1,10 @@
 export default {
     async fetch(request, env, ctx) {
-        return new Response(new URL(request.url).pathname);
+        const path = new URL(request.url).pathname;
+        if (path === "/drive") {
+            return Response.redirect("https://drive.google.com", 302);
+        }
+
+        return new Response("Not found", {status: 404});
     }
 }

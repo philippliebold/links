@@ -38,7 +38,7 @@ export default {
         if (url != null) {
             return Response.redirect(url, 302);
         }
-
+        
         if (path === "/admin") {
             return new Response(adminPage, {headers: {"Content-Type": "text/html; charset=utf-8"}});
         }

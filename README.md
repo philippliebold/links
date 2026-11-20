@@ -1,1 +1,1 @@
-This is my very first projet where I build a link shortener by hand.
+This is my very first project where I build a link shortener by hand.

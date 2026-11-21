@@ -1,4 +1,23 @@
-const adminPage = `<!doctype html>
+export default {
+    async fetch(request, env, ctx) {
+        const path = new URL(request.url).pathname;
+        const url = await env.LINKS.get(path);
+
+        if (url != null) {
+            return Response.redirect(url, 302);
+        }
+
+        if (path === "/admin") {
+            const list = await env.LINKS.list();
+            let rows = "";
+
+            for (const key of list.keys) {
+                const destination = await env.LINKS.get(key.name);
+                console.log(key.name, destination);
+                rows += `<tr><td>${key.name}</td><td><a href="${destination}">${destination}</a></td></tr>`;
+            }
+
+            const adminPage = `<!doctype html>
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />
@@ -11,14 +30,7 @@ const adminPage = `<!doctype html>
             <th>Short path</th>
             <th>Destination</th>
         </tr>
-        <tr>
-            <td>/drive</td>
-            <td><a href="https://www.drive.google.com">https://www.drive.google.com</a></td>
-        </tr>
-        <tr>
-            <td>/github</td>
-            <td><a href="https://www.github.com">https://www.github.com</a></td>
-        </tr>
+        ${rows}
     </table>
     <form>
         <label for="path">Path:</label><br>
@@ -30,19 +42,9 @@ const adminPage = `<!doctype html>
   </body>
 </html>`;
 
-export default {
-    async fetch(request, env, ctx) {
-        const path = new URL(request.url).pathname;
-        const url = await env.LINKS.get(path);
-
-        if (url != null) {
-            return Response.redirect(url, 302);
-        }
-        
-        if (path === "/admin") {
-            return new Response(adminPage, {headers: {"Content-Type": "text/html; charset=utf-8"}});
+            return new Response(adminPage, { headers: { "Content-Type": "text/html; charset=utf-8" } });
         }
 
-        return new Response("Not found", {status: 404});
+        return new Response("Not found", { status: 404 });
     }
 }

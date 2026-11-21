@@ -1,11 +1,6 @@
 export default {
     async fetch(request, env, ctx) {
         const path = new URL(request.url).pathname;
-        const url = await env.LINKS.get(path);
-
-        if (url != null) {
-            return Response.redirect(url, 302);
-        }
 
         if (path === "/admin") {
             if (request.method === "POST") {
@@ -19,6 +14,10 @@ export default {
 
                     if (!path.startsWith("/")) {
                         return new Response("Path must start with /", {status: 400})
+                    }
+
+                    if (path === "/admin") {
+                        return new Response("Path cannot be /admin", {status: 400})
                     }
 
                     if (!destination.startsWith("https://")) {
@@ -84,6 +83,12 @@ export default {
 </html>`;
 
             return new Response(adminPage, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+        }
+
+        const url = await env.LINKS.get(path);
+
+        if (url != null) {
+            return Response.redirect(url, 302);
         }
 
         return new Response("Not found", {status: 404 });

@@ -1,8 +1,8 @@
 export default {
     async fetch(request, env, ctx) {
         const requestUrl = new URL(request.url);
-        const hostname = new requestUrl.hostname;
-        const path = new requestUrl.pathname;
+        const hostname = requestUrl.hostname;
+        const path = requestUrl.pathname;
 
         if ((hostname === "links.philippliebold.com" || hostname === "localhost") && path === "/admin") {
             if (request.method === "POST") {

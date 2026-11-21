@@ -10,7 +10,24 @@ export default {
         if (path === "/admin") {
             if (request.method === "POST") {
                 const data = await request.formData();
-                await env.LINKS.put(data.get("path"), data.get("destination"));
+
+                if (data.get("action") === "delete") {
+                    await env.LINKS.delete(data.get("path"));
+                } else {
+                    const path = data.get("path");
+                    const destination = data.get("destination");
+
+                    if (!path.startsWith("/")) {
+                        return new Response("Path must start with /", {status: 400})
+                    }
+
+                    if (!destination.startsWith("https://")) {
+                        return new Response("Destination must start with https://", {status: 400})
+                    }
+
+                    await env.LINKS.put(path, destination);
+                }
+                
                 return Response.redirect(request.url, 303);
             }
 
@@ -20,7 +37,24 @@ export default {
             for (const key of list.keys) {
                 const destination = await env.LINKS.get(key.name);
                 console.log(key.name, destination);
-                rows += `<tr><td>${key.name}</td><td><a href="${destination}">${destination}</a></td></tr>`;
+                rows += `
+                <tr>
+                  <td>
+                    ${key.name}
+                  </td>
+                  <td>
+                    <a href="${destination}">
+                      ${destination}
+                    </a>
+                  </td>
+                  <td>
+                    <form method="POST">
+                      <input type="hidden" name="path" value="${key.name}">
+                      <input type="hidden" name="action" value="delete">
+                      <input type="submit" value="Delete">
+                    </form>
+                  </td>
+                </tr>`;
             }
 
             const adminPage = `<!doctype html>
@@ -35,6 +69,7 @@ export default {
         <tr>
             <th>Short path</th>
             <th>Destination</th>
+            <th>Action</th>
         </tr>
         ${rows}
     </table>
@@ -51,6 +86,6 @@ export default {
             return new Response(adminPage, { headers: { "Content-Type": "text/html; charset=utf-8" } });
         }
 
-        return new Response("Not found", { status: 404 });
+        return new Response("Not found", {status: 404 });
     }
 }

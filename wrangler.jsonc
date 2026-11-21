@@ -7,5 +7,11 @@
             "binding": "LINKS",
             "id": "fd8b629a32004af6b815ac2ada2c78a9"
         }
+    ],
+    "routes": [
+        {
+            "pattern": "go.philippliebold.com",
+            "custom_domain": true
+        }
     ]
 }

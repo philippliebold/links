@@ -8,6 +8,12 @@ export default {
         }
 
         if (path === "/admin") {
+            if (request.method === "POST") {
+                const data = await request.formData();
+                await env.LINKS.put(data.get("path"), data.get("destination"));
+                return Response.redirect(request.url, 303);
+            }
+
             const list = await env.LINKS.list();
             let rows = "";
 
@@ -32,7 +38,7 @@ export default {
         </tr>
         ${rows}
     </table>
-    <form>
+    <form method="POST">
         <label for="path">Path:</label><br>
         <input type="text" id="path" name="path"><br>
         <label for="destination">Destination:</label><br>

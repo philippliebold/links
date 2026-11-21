@@ -4,7 +4,8 @@
     "compatibility_date": "2026-11-18",
     "kv_namespaces":[
         {
-            "binding": "LINKS"
+            "binding": "LINKS",
+            "id": "fd8b629a32004af6b815ac2ada2c78a9"
         }
     ]
 }

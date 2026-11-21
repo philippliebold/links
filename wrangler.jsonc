@@ -12,6 +12,10 @@
         {
             "pattern": "go.philippliebold.com",
             "custom_domain": true
+        },
+        {
+            "pattern": "links.philippliebold.com",
+            "custom_domain": true
         }
     ]
 }
